@@ -3,6 +3,8 @@ import { Alert, StyleSheet, Text, View, Button } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import React, { useState, useEffect, useRef } from "react";
 import * as Location from "expo-location";
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from "expo-sharing";
 
 let locationOfInterest = [
   {
@@ -44,7 +46,9 @@ export default function App() {
 
   const takeSnapShot = async () => {
     const snapShot = await mapRef.current.takeSnapshot({width: 300, height: 300, result: "base64"})
-    console.log(snapShot)
+    const uri = FileSystem.documentDirectory + "snapshot.png"
+    await FileSystem.writeAsStringAsync(uri, snapShot, {encoding: FileSystem.EncodingType.Base64})
+    await shareAsync(uri)
   }
 
   const userLocation = async () => {
@@ -100,6 +104,7 @@ export default function App() {
             <Button title='increment' onPress={()=>setCount(count + 1)}/>
           </Callout>
         </Marker>
+        {/* <Text style={styles.mapOverlay}>Longitude: {draggableCoord.longitude}, latitude: {draggableCoord.latitude}</Text> */}
       </MapView>
       <Button title="Snap & Share" onPress={takeSnapShot}/>
       {/* <Button onPress={userLocation} title="GET LOCATION" color="red" /> */}
@@ -115,4 +120,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "95%",
   },
+  mapOverlay: {
+    position: "absolute",
+    bottom: 50,
+    backgroundColor: "#ffffff",
+    borderWidth: 2,
+    borderRadius: 5,
+    padding: 16,
+    left: "25%",
+    width: "50%",
+    textAlign: "center"
+  }
 });
