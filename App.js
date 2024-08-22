@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { Alert, StyleSheet, Text, View, Button } from "react-native";
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import React, { useState, useEffect, useRef } from "react";
 import * as Location from "expo-location";
 import * as FileSystem from 'expo-file-system';
